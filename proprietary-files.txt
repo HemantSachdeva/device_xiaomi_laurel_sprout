@@ -2905,6 +2905,10 @@ vendor/lib/libldacBT_enc.so|7a5ced9eb3fcc5745a76ed1c94611af75abd5cd1
 # AptX
 vendor/lib/rfsa/adsp/capi_v2_aptX_CLHDAD_Encoder.so
 
+# Aptx - from crosshatch
+vendor/lib/rfsa/adsp/capi_v2_aptX_Classic.so|7b13cf50e7a5fa7cd59e28e54c6b7dc06889bcf7
+vendor/lib/rfsa/adsp/capi_v2_aptX_HD.so|867e374575edf2a445ed9fa774f5566f763f0756
+
 # CDSP
 vendor/bin/cdsprpcd
 vendor/etc/init/vendor.qti.cdsprpc-service.rc
