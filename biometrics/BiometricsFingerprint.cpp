@@ -18,6 +18,11 @@
 
 #include "BiometricsFingerprint.h"
 
+#include <unistd.h>
+#include <string>
+#include <thread>
+#include <chrono>
+
 #include <android-base/logging.h>
 #include <fstream>
 #include <cmath>
@@ -98,17 +103,28 @@ Return<bool> BiometricsFingerprint::isUdfps(uint32_t) {
     return true;
 }
 
-Return<void> BiometricsFingerprint::onFingerDown(uint32_t, uint32_t, float, float) {
+static void setHBMOn(sp<IXiaomiFingerprint> xiaomiFingerprintService) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(80));
     set(DISPPARAM_PATH, DISPPARAM_HBM_FOD_ON);
     set(FOD_STATUS_PATH, FOD_STATUS_ON);
     xiaomiFingerprintService->extCmd(COMMAND_NIT, PARAM_NIT_FOD);
+}
+
+static void setHBMOff(sp<IXiaomiFingerprint> xiaomiFingerprintService) {
+    xiaomiFingerprintService->extCmd(COMMAND_NIT, PARAM_NIT_NONE);
+    set(FOD_STATUS_PATH, FOD_STATUS_OFF);
+    set(DISPPARAM_PATH, DISPPARAM_HBM_FOD_OFF);
+}
+
+Return<void> BiometricsFingerprint::onFingerDown(uint32_t, uint32_t, float, float) {
+    std::thread mThread (setHBMOn, xiaomiFingerprintService);
+    mThread.detach();
     return Void();
 }
 
 Return<void> BiometricsFingerprint::onFingerUp() {
-    xiaomiFingerprintService->extCmd(COMMAND_NIT, PARAM_NIT_NONE);
-    set(FOD_STATUS_PATH, FOD_STATUS_OFF);
-    set(DISPPARAM_PATH, DISPPARAM_HBM_FOD_OFF);
+    std::thread mThread (setHBMOff, xiaomiFingerprintService);
+    mThread.detach();
     return Void();
 }
 
