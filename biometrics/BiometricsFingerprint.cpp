@@ -123,7 +123,7 @@ Return<void> BiometricsFingerprint::onFingerDown(uint32_t, uint32_t, float, floa
 }
 
 Return<void> BiometricsFingerprint::onFingerUp() {
-    setHBMOff();
+    setHBMOff(xiaomiFingerprintService);
     return Void();
 }
 
