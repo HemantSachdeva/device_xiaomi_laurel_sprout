@@ -123,8 +123,7 @@ Return<void> BiometricsFingerprint::onFingerDown(uint32_t, uint32_t, float, floa
 }
 
 Return<void> BiometricsFingerprint::onFingerUp() {
-    std::thread mThread (setHBMOff, xiaomiFingerprintService);
-    mThread.detach();
+    setHBMOff();
     return Void();
 }
 
